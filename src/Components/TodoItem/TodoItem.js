@@ -1,8 +1,8 @@
-import React, {PureComponent} from 'react';
+import React, {Component, PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import './TodoItem.css';
 import {actions} from '../../Redux/index';
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 
 
 const mapDispatchToProps = dispatch => ({
@@ -10,7 +10,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-class TodoItem extends PureComponent {
+class TodoItem extends Component {
     static propTypes = {
         todo: PropTypes.object.isRequired,
         // dispatch
@@ -37,7 +37,27 @@ class TodoItem extends PureComponent {
 
 
 
-export default connect(
+connect(
     null,
     mapDispatchToProps
 )(TodoItem);
+
+export default function TodoItemFn(props) {
+    const dispatch = useDispatch();
+    const handleChange = (e) => dispatch(actions.Todo.toggleTodo(props.todo.id));
+
+    return (
+        <li>
+            <div className="view">
+                <input className="toggle" type="checkbox" checked={props.todo.done}
+                    onChange={handleChange}
+                />
+                <label>{props.todo.title}</label>
+            </div>
+            <input className="edit" value="fdsfsd" readOnly />
+        </li>
+    );
+}
+TodoItemFn.propTypes = {
+    todo: PropTypes.object.isRequired,
+}
